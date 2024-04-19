@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><acciones>
+    <accion nombre="NUEVO_SITIO_WEB">
+        <parametros>
+            <parametro nombre="ID">[_valorid]</parametro>
+            <parametro nombre="USUARIO_CREACION">[usuariocreacion3]</parametro>
+            <parametro nombre="FECHA_CREACION">[2023-11-20]</parametro>
+            <parametro nombre="FECHA_MODIFICACION">[2023-11-20]</parametro>
+            <parametro nombre="USUARIO_MODIFICACION">[usuario_prueba]</parametro>
+        </parametros>
+    </accion>
+    <accion nombre="AGREGAR_COMPONENTE">
+        <parametros>
+            <parametro nombre="ID">[-titulo_inicio]</parametro>
+            <parametro nombre="PAGINA">[index]</parametro>
+            <parametro nombre="CLASE">[TITULO]</parametro>
+        </parametros>
+        <atributos>
+            <atributo nombre="TEXTO">[Bienvenido al Sitio de Prueba!]</atributo>
+            <atributo nombre="COLOR">[#336699]</atributo>
+            <atributo nombre="ALINEACION">[CENTRAR]</atributo>
+        </atributos>
+    </accion>
+    <accion nombre="AGREGAR_COMPONENTE">
+        <parametros>
+            <parametro nombre="ID">[-parrafo_inicio]</parametro>
+            <parametro nombre="PAGINA">[index]</parametro>
+            <parametro nombre="CLASE">[PARRAFO]</parametro>
+        </parametros>
+        <atributos>
+            <atributo nombre="TEXTO">[Este sitio web es un ejemplo para demostrar las capacidades de la aplicacion. Explora las diferentes paginas para ver más componentes y funcionalidades.]</atributo>
+            <atributo nombre="COLOR">[#000000]</atributo>
+            <atributo nombre="ALINEACION">[CENTRAR]</atributo>
+        </atributos>
+    </accion>
+    <accion nombre="AGREGAR_COMPONENTE">
+        <parametros>
+            <parametro nombre="ID">[-imagen_inicio]</parametro>
+            <parametro nombre="PAGINA">[index]</parametro>
+            <parametro nombre="CLASE">[IMAGEN]</parametro>
+        </parametros>
+        <atributos>
+            <atributo nombre="ORIGEN">[https://www.educaciontrespuntocero.com/wp-content/uploads/2020/04/mejores-bancos-de-imagenes-gratis.jpg]</atributo> 
+            <atributo nombre="ANCHO">[800px]</atributo> 
+            <atributo nombre="ALTURA">[400px]</atributo>
+            <atributo nombre="ALINEACION">[CENTRAR]</atributo>
+        </atributos>
+    </accion>
+
+    <accion nombre="AGREGAR_COMPONENTE">
+        <parametros>
+            <parametro nombre="ID">[-titulo_contacto]</parametro>
+            <parametro nombre="PAGINA">[index]</parametro>
+            <parametro nombre="CLASE">[TITULO]</parametro>
+        </parametros>
+        <atributos>
+            <atributo nombre="TEXTO">[Contactanos]</atributo>
+            <atributo nombre="COLOR">[#336699]</atributo>
+            <atributo nombre="ALINEACION">[CENTRAR]</atributo>
+        </atributos>
+    </accion>
+        <accion nombre="AGREGAR_COMPONENTE">
+            <parametros>
+                <parametro nombre="ID">[-titulo_productos]</parametro>
+                <parametro nombre="PAGINA">[index]</parametro>
+                <parametro nombre="CLASE">[TITULO]</parametro>
+            </parametros>
+            <atributos>
+                <atributo nombre="TEXTO">[Nuestros Productos]</atributo>
+                <atributo nombre="COLOR">[#336699]</atributo>
+                <atributo nombre="ALINEACION">[CENTRAR]</atributo>
+            </atributos>
+        </accion>
+
+    <accion nombre="AGREGAR_COMPONENTE">
+        <parametros>
+            <parametro nombre="ID">[-producto_1]</parametro>
+            <parametro nombre="PAGINA">[index]</parametro>
+            <parametro nombre="CLASE">[PARRAFO]</parametro>
+        </parametros>
+        <atributos>
+            <atributo nombre="TEXTO">[Producto Ejemplo 1]</atributo>  
+        </atributos>
+    </accion> 
+    <accion nombre="AGREGAR_COMPONENTE">
+        <parametros>
+            <parametro nombre="ID">[-imagen_profucto]</parametro>
+            <parametro nombre="PAGINA">[index]</parametro>
+            <parametro nombre="CLASE">[IMAGEN]</parametro>
+        </parametros>
+        <atributos>
+            <atributo nombre="ORIGEN">[https://www.educaciontrespuntocero.com/wp-content/uploads/2020/04/mejores-bancos-de-imagenes-gratis.jpg]</atributo> 
+            <atributo nombre="ANCHO">[800px]</atributo> 
+            <atributo nombre="ALTURA">[400px]</atributo>
+            <atributo nombre="ALINEACION">[CENTRAR]</atributo>
+        </atributos>
+    </accion>
+<accion nombre="AGREGAR_COMPONENTE"><parametros><parametro nombre="ID">[-imagen_profwedasdasreucto]</parametro><parametro nombre="PAGINA">[index]</parametro><parametro nombre="CLASE">[IMAGEN]</parametro></parametros><atributos><atributo nombre="ALTURA">[400px]</atributo><atributo nombre="ANCHO">[800px]</atributo><atributo nombre="ALINEACION">[center]</atributo><atributo nombre="ORIGEN">[https://i.blogs.es/0ca9a6/aa/1366_2000.jpeg]</atributo></atributos></accion><accion nombre="AGREGAR_COMPONENTE"><parametros><parametro nombre="ID">[-imagen_profwedasdasreucto1]</parametro><parametro nombre="PAGINA">[index]</parametro><parametro nombre="CLASE">[IMAGEN]</parametro></parametros><atributos><atributo nombre="ALTURA">[400px]</atributo><atributo nombre="ANCHO">[800px]</atributo><atributo nombre="ALINEACION">[center]</atributo><atributo nombre="ORIGEN">[https://i.blogs.es/0ca9a6/aa/1366_2000.jpeg]</atributo></atributos></accion></acciones>

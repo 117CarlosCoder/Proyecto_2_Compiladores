@@ -1,0 +1,106 @@
+
+package JcupHtml;
+import java_cup.runtime.*;
+import Parametros.Parametros;
+import EjecucionHtml.EjecucionHtml;
+import Atributos.Atributos;
+
+
+parser code
+{:
+EjecucionHtml ejecucion = new EjecucionHtml();
+Parametros parametros = new Parametros("","","","","","","","","","");
+Atributos atributosN = new Atributos("","","","","","","","");
+    /**
+     * Método al que se llama automáticamente ante algún error sintactico.
+     **/
+    public void syntax_error(Symbol s){
+        System.out.println("Error Sintáctico en la Línea " + (s.left) +
+        " Columna "+s.right+ ". No se esperaba este componente: " +s.value+".");
+
+    }
+
+    /**
+     * Método al que se llama automáticamente ante algún error sintáctico
+     * en el que ya no es posible una recuperación de errores.
+     **/
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
+        System.out.println("Error síntactico irrecuperable en la Línea " +
+        (s.left)+ " Columna "+s.right+". Componente " + s.value +
+        " no reconocido.");
+    }
+
+:}
+
+terminal String PTCOMA,PARIZQ,PARDER,CORIZQ,CORDER;
+terminal String INICIO, ACCION, ACCIONES, NOMBREAC, IGUAL, CIERRE, FINAL,COMILLA;
+terminal String STRING_LITERAL;
+terminal String IDS;
+terminal String LETRAS;
+terminal String CORAB, CORCE;
+terminal String PARAMETROS ,PARAMETRO ,NUEVOSITIO ,NUEVAPAG ,MODIPAG, ATRIBUTO, ATRIBUTOS, ETIQUETAS, ETIQUETA;
+terminal String AGREGARCOM ,PAGINA ,CLASE ,ID ,TITULO, SITIO, PADRE;
+terminal String USUARIOCREA ,FECHACREA ,FECHAMODI ,USUARIOMODI, MODICOM ,BORRARSITIO, BORRARPAG;
+
+non terminal ini;
+non terminal instrucciones;
+non terminal accion;
+non terminal tipo;
+non terminal valor;
+non terminal valorp;
+non terminal valorpp;
+non terminal parametros;
+non terminal parametro;
+non terminal atributos;
+non terminal atributo;
+
+start with ini;
+
+ini::=instrucciones;
+
+instrucciones ::=
+   INICIO ACCIONES CIERRE accion INICIO FINAL ACCIONES CIERRE  {:System.out.println("Acciones");:} instrucciones
+ | INICIO ACCIONES CIERRE accion INICIO FINAL ACCIONES CIERRE  {:System.out.println("Acciones"); ejecucion.ejecucion();:}
+ | accion {: ejecucion.ejecucion();:}
+ | error instrucciones
+;
+
+
+
+accion ::=
+  INICIO ACCION NOMBREAC IGUAL COMILLA LETRAS:a COMILLA CIERRE
+    parametros
+  INICIO FINAL ACCION CIERRE {:   System.out.println("Accion " + a ); System.out.println(parametros.toString()); ejecucion.valor(a,atributosN,parametros);:}
+  |INICIO ACCION NOMBREAC IGUAL COMILLA LETRAS:a COMILLA CIERRE
+       parametros
+       atributos
+   INICIO FINAL ACCION CIERRE {:   System.out.println("Accion " + a ); System.out.println(parametros.toString()); ejecucion.valor(a,atributosN,parametros);:}
+  |accion INICIO ACCION NOMBREAC IGUAL COMILLA LETRAS:a COMILLA CIERRE
+       parametros
+       atributos
+   INICIO FINAL ACCION CIERRE {: System.out.println("Accion " + a ); System.out.println(parametros.toString()); ejecucion.valor(a,atributosN,parametros);:}
+  |accion INICIO ACCION NOMBREAC IGUAL COMILLA LETRAS:a COMILLA CIERRE
+    parametros
+   INICIO FINAL ACCION CIERRE {:   System.out.println("Accion " + a ); System.out.println(parametros.toString()); ejecucion.valor(a,atributosN,parametros);:}
+
+;
+
+parametros ::=
+    INICIO PARAMETROS CIERRE INICIO FINAL PARAMETROS CIERRE {:System.out.println("Parametros"  );:}
+    |INICIO PARAMETROS CIERRE parametro INICIO FINAL PARAMETROS CIERRE {:System.out.println("Parametros"  );:}
+;
+
+parametro ::=
+    INICIO PARAMETRO NOMBREAC IGUAL COMILLA ID COMILLA CIERRE  STRING_LITERAL:e  INICIO FINAL PARAMETRO CIERRE  {:parametros.ingresar("ID",e, parametros); System.out.println("Parametro " + e );:}
+    |INICIO PARAMETRO NOMBREAC IGUAL COMILLA  LETRAS:b  COMILLA CIERRE  STRING_LITERAL:c  INICIO FINAL PARAMETRO CIERRE  {: parametros.ingresar(b,c, parametros); System.out.println("Parametro " + b + " " + c );:}
+    | parametro INICIO PARAMETRO NOMBREAC IGUAL COMILLA LETRAS:d COMILLA CIERRE  STRING_LITERAL:e  INICIO FINAL PARAMETRO CIERRE {: parametros.ingresar(d,e, parametros); System.out.println("Parametro " + d + " " + e);:}
+;
+
+atributos ::=
+    INICIO ATRIBUTOS CIERRE atributo INICIO FINAL ATRIBUTOS CIERRE {:System.out.println("Atributos");:}
+;
+
+atributo ::=
+    INICIO ATRIBUTO NOMBREAC IGUAL COMILLA LETRAS:a COMILLA CIERRE  STRING_LITERAL:b  INICIO FINAL ATRIBUTO CIERRE {:System.out.println("Atributo  " + a + " " + b); atributosN.ingresar(a,b,atributosN); :}
+    | atributo INICIO ATRIBUTO NOMBREAC IGUAL COMILLA LETRAS:a COMILLA CIERRE  STRING_LITERAL:b  INICIO FINAL ATRIBUTO CIERRE {: System.out.println("Atributo  " + a + " " + b); atributosN.ingresar(a,b,atributosN); :}
+;

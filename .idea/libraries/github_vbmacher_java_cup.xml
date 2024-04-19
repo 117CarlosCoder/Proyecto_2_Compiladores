@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="github.vbmacher.java.cup" type="repository">
+    <properties maven-id="com.github.vbmacher:java-cup:11b-20160615-3" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/vbmacher/java-cup/11b-20160615-3/java-cup-11b-20160615-3.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

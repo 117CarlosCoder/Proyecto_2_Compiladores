@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="de.jflex" type="repository">
+    <properties maven-id="de.jflex:jflex:1.9.1" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/de/jflex/jflex/1.9.1/jflex-1.9.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/vbmacher/java-cup-runtime/11b-20160615-1/java-cup-runtime-11b-20160615-1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/ant/ant/1.10.13/ant-1.10.13.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/ant/ant-launcher/1.10.13/ant-launcher-1.10.13.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
