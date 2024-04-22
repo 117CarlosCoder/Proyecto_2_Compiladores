@@ -37,8 +37,9 @@ public class ValorClaseModificador {
             if (!atributos.getAncho().isEmpty()) MoidificarXml.modificarAccion(doc, parametros.getId(), "ANCHO",atributos.getAncho());
         }
         if (parametros.getClase().equals("MENU")){
+            System.out.println(atributos);
             if (!atributos.getPadre().isEmpty()) MoidificarXml.modificarAccion(doc, parametros.getId(), "PADRE",atributos.getPadre());
-            if (!atributos.getEtiquetas().isEmpty()) MoidificarXml.modificarAccion(doc, parametros.getId(), "ETIQUETAS", atributos.getEtiquetas());
+            if (!atributos.getEtiquetas().isEmpty()) MoidificarXml.modificarAccion(doc, parametros.getId(), "ETIQUETASX", atributos.getEtiquetas());
 
         }
     }

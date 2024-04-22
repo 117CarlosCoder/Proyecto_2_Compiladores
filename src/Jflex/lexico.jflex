@@ -12,6 +12,7 @@ import java.io.IOException;
 %char
 %cup
 %unicode
+%caseless
 %ignorecase
 
 %init{
@@ -23,28 +24,33 @@ StringBuffer string = new StringBuffer();
 %}
 %state STRING
 BLANCOS = [ \r\t]+
-IDS = [_|-|$][a-z|A-Z]+
+IDS = [_|-|$][a-z|A-Z|0-9]+
 LETRAS = [-|_|#|$|%|a-z|A-Z|0-9|]+
 
 
 %%
 
-<YYINITIAL>"ID" {return new Symbol(sym.ID,yyline,(int) yychar, yytext());}
 <YYINITIAL>"acciones" {return new Symbol(sym.ACCIONES,yyline,(int) yychar, yytext());}
 <YYINITIAL>"accion" {return new Symbol(sym.ACCION,yyline,(int) yychar, yytext());}
 <YYINITIAL>"parametros" {return new Symbol(sym.PARAMETROS,yyline,(int) yychar, yytext());}
 <YYINITIAL>"parametro" {return new Symbol(sym.PARAMETRO,yyline,(int) yychar, yytext());}
 <YYINITIAL>"atributos" {return new Symbol(sym.ATRIBUTOS,yyline,(int) yychar, yytext());}
 <YYINITIAL>"atributo" {return new Symbol(sym.ATRIBUTO,yyline,(int) yychar, yytext());}
-<YYINITIAL>"etiquetas" {return new Symbol(sym.ETIQUETAS,yyline,(int) yychar, yytext());}
+<YYINITIAL>"etiquetas" {return new Symbol(sym.ETIQUETASX,yyline,(int) yychar, yytext());}
 <YYINITIAL>"etiqueta" {return new Symbol(sym.ETIQUETA,yyline,(int) yychar, yytext());}
+
+
+
+<YYINITIAL>"ID" {return new Symbol(sym.ID,yyline,(int) yychar, yytext());}
 <YYINITIAL>"nombre" {return new Symbol(sym.NOMBREAC,yyline,(int) yychar, yytext());}
+<YYINITIAL>"valor" {return new Symbol(sym.PTCOMA,yyline,(int) yychar, yytext());}
 
 <YYINITIAL> {
 "<" {return new Symbol(sym.INICIO,yyline,(int) yychar, yytext());}
 "/" {return new Symbol(sym.FINAL,yyline,(int) yychar, yytext());}
 "=" {return new Symbol(sym.IGUAL,yyline,(int) yychar, yytext());}
 ">" {return new Symbol(sym.CIERRE,yyline,(int) yychar, yytext());}
+//"|" {return new Symbol(sym.SEPARADOR,yyline,(int) yychar, yytext());}
 //"[" {return new Symbol(sym.CORAB,yyline,(int) yychar, yytext());}
 //"]" {return new Symbol(sym.CORCE,yyline,(int) yychar, yytext());}
 \"  {return new Symbol(sym.COMILLA,yyline,(int) yychar, yytext());}
@@ -55,6 +61,8 @@ LETRAS = [-|_|#|$|%|a-z|A-Z|0-9|]+
 <YYINITIAL>{BLANCOS} {}
 <YYINITIAL>{IDS} {return new Symbol(sym.IDS,yyline,(int) yychar, yytext());}
 <YYINITIAL>{LETRAS} {return new Symbol(sym.LETRAS,yyline,(int) yychar, yytext());}
+
+
 
     <STRING> {
               [-|a-z|A-Z|0-9|-|_| |/|#|$|@|!|%|&|*|(|)|.|,|-|=|+|:|\/\/||]+         { string.append(yytext()); }

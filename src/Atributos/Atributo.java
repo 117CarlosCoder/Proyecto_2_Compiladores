@@ -8,5 +8,6 @@ public enum Atributo {
     ALTURA,
     ANCHO,
     PADRE,
-    ETIQUETAS
+    ETIQUETASX,
+    ETIQUETA
 }

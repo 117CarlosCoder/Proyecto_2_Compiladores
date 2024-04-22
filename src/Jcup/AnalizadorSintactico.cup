@@ -15,7 +15,8 @@ Ejecucion ejecucion = new Ejecucion();
 EjecucionHtml ejecucionHtml = new EjecucionHtml();
 String acumulaErrores = "";
 Parametros parametros = new Parametros("","","","","","","","","","");
-Atributos atributosN = new Atributos("","","","","","","","");
+Atributos atributosN = new Atributos("","","","","","","");
+boolean valor;
     /**
      * Método al que se llama automáticamente ante algún error sintactico.
      **/
@@ -49,7 +50,9 @@ terminal String STRING_LITERAL;
 terminal String IDS;
 terminal String LETRAS;
 terminal String CORAB, CORCE;
-terminal String PARAMETROS ,PARAMETRO ,NUEVOSITIO ,NUEVAPAG ,MODIPAG, ATRIBUTO, ATRIBUTOS, ETIQUETAS, ETIQUETA;
+//terminal String VALORETIQUETA;
+//terminal String SEPARADOR;
+terminal String PARAMETROS ,PARAMETRO ,NUEVOSITIO ,NUEVAPAG ,MODIPAG, ATRIBUTO, ATRIBUTOS, ETIQUETASX, ETIQUETA;
 terminal String AGREGARCOM ,PAGINA ,CLASE ,ID ,TITULO, SITIO, PADRE;
 terminal String USUARIOCREA ,FECHACREA ,FECHAMODI ,USUARIOMODI, MODICOM ,BORRARSITIO, BORRARPAG;
 
@@ -57,22 +60,21 @@ non terminal ini;
 non terminal instrucciones;
 non terminal accion;
 non terminal tipo;
-non terminal valor;
-non terminal valorp;
-non terminal valorpp;
 non terminal parametros;
 non terminal parametro;
 non terminal atributos;
 non terminal atributo;
+non terminal etiquetas;
+non terminal etiqueta;
 
 start with ini;
 
 ini::=instrucciones;
 
 instrucciones ::=
-   INICIO ACCIONES CIERRE accion INICIO FINAL ACCIONES CIERRE  {:System.out.println("Acciones");ejecucionHtml.ejecutarHtml(acumulaErrores,parametros.getPagina()); :} instrucciones
- | INICIO ACCIONES CIERRE accion INICIO FINAL ACCIONES CIERRE  {:System.out.println("Acciones");ejecucionHtml.ejecutarHtml(acumulaErrores,parametros.getPagina()); :}
- | accion {:System.out.println("Accion "); ejecucionHtml.ejecutarHtml(acumulaErrores,parametros.getPagina()); :}
+   INICIO ACCIONES CIERRE accion INICIO FINAL ACCIONES CIERRE  {:System.out.println("Acciones");ejecucionHtml.ejecutarHtml(acumulaErrores,parametros.getPagina(),valor); :} instrucciones
+ | INICIO ACCIONES CIERRE accion INICIO FINAL ACCIONES CIERRE  {:System.out.println("Acciones");ejecucionHtml.ejecutarHtml(acumulaErrores,parametros.getPagina(),valor); :}
+ | accion {:System.out.println("Accion ");ejecucionHtml.ejecutarHtml(acumulaErrores,parametros.getPagina(),valor); :}
  | error instrucciones
 ;
 
@@ -81,18 +83,26 @@ instrucciones ::=
 accion ::=
   INICIO ACCION NOMBREAC IGUAL COMILLA LETRAS:a COMILLA CIERRE
     parametros
-  INICIO FINAL ACCION CIERRE {:   System.out.println("Accion " + a ); System.out.println(parametros.toString()); ejecucion.valor(a,atributosN,parametros);:}
+  INICIO FINAL ACCION CIERRE {:   System.out.println("Accion " + a ); System.out.println(parametros.toString()); valor = ejecucion.valor(a,atributosN,parametros); if (valor){System.out.println("paso");}else {System.out.println("no paso");}:}
   |INICIO ACCION NOMBREAC IGUAL COMILLA LETRAS:a COMILLA CIERRE
        parametros
        atributos
-   INICIO FINAL ACCION CIERRE {:   System.out.println("Accion " + a ); System.out.println(parametros.toString()); ejecucion.valor(a,atributosN,parametros);:}
+   INICIO FINAL ACCION CIERRE {:   System.out.println("Accion " + a ); System.out.println(parametros.toString()); valor = ejecucion.valor(a,atributosN,parametros); if (valor){System.out.println("paso");}else {System.out.println("no paso");}:}
+  |INICIO ACCION NOMBREAC IGUAL COMILLA LETRAS:a COMILLA CIERRE
+          parametros
+          etiquetas
+   INICIO FINAL ACCION CIERRE {:   System.out.println("Accion " + a ); System.out.println(parametros.toString()); valor = ejecucion.valor(a,atributosN,parametros); if (valor){System.out.println("paso");}else {System.out.println("no paso");}:}
   |accion INICIO ACCION NOMBREAC IGUAL COMILLA LETRAS:a COMILLA CIERRE
        parametros
        atributos
-   INICIO FINAL ACCION CIERRE {: System.out.println("Accion " + a ); System.out.println(parametros.toString()); ejecucion.valor(a,atributosN,parametros);:}
+   INICIO FINAL ACCION CIERRE {: System.out.println("Accion " + a ); System.out.println(parametros.toString()); valor = ejecucion.valor(a,atributosN,parametros); if (valor){System.out.println("paso");}else {System.out.println("no paso");}:}
+  |accion INICIO ACCION NOMBREAC IGUAL COMILLA LETRAS:a COMILLA CIERRE
+          parametros
+          etiquetas
+   INICIO FINAL ACCION CIERRE {: System.out.println("Accion " + a ); System.out.println(parametros.toString()); valor = ejecucion.valor(a,atributosN,parametros); if (valor){System.out.println("paso");}else {System.out.println("no paso");}:}
   |accion INICIO ACCION NOMBREAC IGUAL COMILLA LETRAS:a COMILLA CIERRE
     parametros
-   INICIO FINAL ACCION CIERRE {:   System.out.println("Accion " + a ); System.out.println(parametros.toString()); ejecucion.valor(a,atributosN,parametros);:}
+   INICIO FINAL ACCION CIERRE {:   System.out.println("Accion " + a ); System.out.println(parametros.toString()); valor = ejecucion.valor(a,atributosN,parametros); if (valor){System.out.println("paso");}else {System.out.println("no paso");}:}
 
 ;
 
@@ -114,4 +124,14 @@ atributos ::=
 atributo ::=
     INICIO ATRIBUTO NOMBREAC IGUAL COMILLA LETRAS:a COMILLA CIERRE  STRING_LITERAL:b  INICIO FINAL ATRIBUTO CIERRE {:System.out.println("Atributo  " + a + " " + b); atributosN.ingresar(a,b,atributosN); :}
     | atributo INICIO ATRIBUTO NOMBREAC IGUAL COMILLA LETRAS:a COMILLA CIERRE  STRING_LITERAL:b  INICIO FINAL ATRIBUTO CIERRE {: System.out.println("Atributo  " + a + " " + b); atributosN.ingresar(a,b,atributosN); :}
+;
+
+etiquetas ::=
+    INICIO ETIQUETASX CIERRE etiqueta INICIO FINAL ETIQUETASX CIERRE {:System.out.println("Etiquetas");:}
+;
+
+etiqueta ::=
+    INICIO ETIQUETA PTCOMA IGUAL COMILLA IDS:a COMILLA FINAL CIERRE {: System.out.println("Etiqueta " + a ); atributosN.ingresar("ETIQUETA",a,atributosN); :}
+   |etiqueta INICIO ETIQUETA PTCOMA IGUAL COMILLA IDS:a COMILLA FINAL CIERRE {: System.out.println("Etiqueta  " + a ); atributosN.ingresar("ETIQUETA",a,atributosN); :}
+
 ;

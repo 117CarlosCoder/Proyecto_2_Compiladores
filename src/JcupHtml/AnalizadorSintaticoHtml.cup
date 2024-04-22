@@ -38,7 +38,7 @@ terminal String STRING_LITERAL;
 terminal String IDS;
 terminal String LETRAS;
 terminal String CORAB, CORCE;
-terminal String PARAMETROS ,PARAMETRO ,NUEVOSITIO ,NUEVAPAG ,MODIPAG, ATRIBUTO, ATRIBUTOS, ETIQUETAS, ETIQUETA;
+terminal String PARAMETROS ,PARAMETRO ,NUEVOSITIO ,NUEVAPAG ,MODIPAG, ATRIBUTO, ATRIBUTOS, ETIQUETASX, ETIQUETA;
 terminal String AGREGARCOM ,PAGINA ,CLASE ,ID ,TITULO, SITIO, PADRE;
 terminal String USUARIOCREA ,FECHACREA ,FECHAMODI ,USUARIOMODI, MODICOM ,BORRARSITIO, BORRARPAG;
 
@@ -53,6 +53,8 @@ non terminal parametros;
 non terminal parametro;
 non terminal atributos;
 non terminal atributo;
+non terminal etiquetas;
+non terminal etiqueta;
 
 start with ini;
 
@@ -75,11 +77,19 @@ accion ::=
        parametros
        atributos
    INICIO FINAL ACCION CIERRE {:   System.out.println("Accion " + a ); System.out.println(parametros.toString()); ejecucion.valor(a,atributosN,parametros);:}
-  |accion INICIO ACCION NOMBREAC IGUAL COMILLA LETRAS:a COMILLA CIERRE
+  |INICIO ACCION NOMBREAC IGUAL COMILLA LETRAS:a COMILLA CIERRE
+            parametros
+            etiquetas
+  INICIO FINAL ACCION CIERRE {:   System.out.println("Accion " + a ); System.out.println(parametros.toString()); ejecucion.valor(a,atributosN,parametros);:}
+ |accion INICIO ACCION NOMBREAC IGUAL COMILLA LETRAS:a COMILLA CIERRE
        parametros
        atributos
    INICIO FINAL ACCION CIERRE {: System.out.println("Accion " + a ); System.out.println(parametros.toString()); ejecucion.valor(a,atributosN,parametros);:}
-  |accion INICIO ACCION NOMBREAC IGUAL COMILLA LETRAS:a COMILLA CIERRE
+ |accion INICIO ACCION NOMBREAC IGUAL COMILLA LETRAS:a COMILLA CIERRE
+           parametros
+           etiquetas
+  INICIO FINAL ACCION CIERRE {: System.out.println("Accion " + a ); System.out.println(parametros.toString()); ejecucion.valor(a,atributosN,parametros);:}
+ |accion INICIO ACCION NOMBREAC IGUAL COMILLA LETRAS:a COMILLA CIERRE
     parametros
    INICIO FINAL ACCION CIERRE {:   System.out.println("Accion " + a ); System.out.println(parametros.toString()); ejecucion.valor(a,atributosN,parametros);:}
 
@@ -103,4 +113,14 @@ atributos ::=
 atributo ::=
     INICIO ATRIBUTO NOMBREAC IGUAL COMILLA LETRAS:a COMILLA CIERRE  STRING_LITERAL:b  INICIO FINAL ATRIBUTO CIERRE {:System.out.println("Atributo  " + a + " " + b); atributosN.ingresar(a,b,atributosN); :}
     | atributo INICIO ATRIBUTO NOMBREAC IGUAL COMILLA LETRAS:a COMILLA CIERRE  STRING_LITERAL:b  INICIO FINAL ATRIBUTO CIERRE {: System.out.println("Atributo  " + a + " " + b); atributosN.ingresar(a,b,atributosN); :}
+;
+
+etiquetas ::=
+    INICIO ETIQUETASX CIERRE etiqueta INICIO FINAL ETIQUETASX CIERRE {:System.out.println("Etiquetas");:}
+;
+
+etiqueta ::=
+    INICIO ETIQUETA PTCOMA IGUAL COMILLA IDS:a COMILLA FINAL CIERRE {: System.out.println("Etiqueta " + a ); atributosN.ingresar("ETIQUETA",a,atributosN); :}
+   |etiqueta INICIO ETIQUETA PTCOMA IGUAL COMILLA IDS:a COMILLA FINAL CIERRE {: System.out.println("Etiqueta  " + a ); atributosN.ingresar("ETIQUETA",a,atributosN); :}
+
 ;

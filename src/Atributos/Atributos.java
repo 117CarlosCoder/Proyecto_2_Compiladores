@@ -1,5 +1,9 @@
 package Atributos;
 
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Atributos {
 
     private String texto;
@@ -10,6 +14,7 @@ public class Atributos {
     private String ancho;
     private String padre;
     private String etiquetas;
+    private final List<String> etiqueta = new ArrayList<>();
 
     public Atributos(String texto, String alineacion, String color, String origen, String altura, String ancho, String padre, String etiquetas) {
         this.texto = texto;
@@ -46,7 +51,11 @@ public class Atributos {
             atributos.setAlineacion(parametro);
 
         }
-        if (Atributo.ETIQUETAS.toString().equals(valor)){
+        if (Atributo.ETIQUETA.toString().equals(valor)){
+            atributos.getEtiqueta().add(parametro);
+            System.out.println(atributos);
+        }
+        if (Atributo.ETIQUETASX.toString().equals(valor)){
             atributos.setEtiquetas(parametro);
 
         }
@@ -67,10 +76,11 @@ public class Atributos {
                 ", alineacion='" + alineacion + '\'' +
                 ", color='" + color + '\'' +
                 ", origen='" + origen + '\'' +
-                ", altuar='" + altura + '\'' +
+                ", altura='" + altura + '\'' +
                 ", ancho='" + ancho + '\'' +
                 ", padre='" + padre + '\'' +
                 ", etiquetas='" + etiquetas + '\'' +
+                ", etiqueta=" + etiqueta +
                 '}';
     }
 
@@ -100,6 +110,10 @@ public class Atributos {
             if (alineacion.equals("JUSTIFICAR") || alineacion.equals("justify")){
                 this.alineacion = "justify";
             }
+    }
+
+    public List<String> getEtiqueta() {
+        return etiqueta;
     }
 
     public String getColor() {

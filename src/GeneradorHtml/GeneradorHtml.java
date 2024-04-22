@@ -10,7 +10,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import static Ejecucion.Ejecucion.direccionesFinales;
 
+import static EjecucionHtml.EjecucionHtml.direccionesFinales2;
 import static ServidorP.ServidorP.message;
 
 public class GeneradorHtml {
@@ -26,6 +28,18 @@ public class GeneradorHtml {
                     "<html>\n" +
                     "<head>\n" +
                     "<title>Mi Página Web</title>\n" +
+                    "<script>"+
+                    "window.onload = function() {"+
+                    "var xhr = new XMLHttpRequest();"+
+                    "xhr.open(\"GET\", \"http://localhost:5000/\", true);"+
+                    "xhr.onreadystatechange = function() {"+
+                    " if (xhr.readyState === 4 && xhr.status === 200) {"+
+                    "console.log(\"Visita registrada correctamente.\");"+
+                    "}"+
+                    " };"+
+                    "xhr.send();"+
+                    "};"+
+                    "</script>"+
                     "</head>\n" +
                     "<body>\n" +
                     "</body>\n" +
@@ -37,6 +51,18 @@ public class GeneradorHtml {
                     "<html>\n" +
                     "<head>\n" +
                     "<title>"+parametros.getSitio()+"</title>\n" +
+                    "<script>"+
+                    "window.onload = function() {"+
+                    "var xhr = new XMLHttpRequest();"+
+                    "xhr.open(\"GET\", \"http://localhost:5000/\", true);"+
+                    "xhr.onreadystatechange = function() {"+
+                    " if (xhr.readyState === 4 && xhr.status === 200) {"+
+                    "console.log(\"Visita registrada correctamente.\");"+
+                    "}"+
+                    " };"+
+                    "xhr.send();"+
+                    "};"+
+                    "</script>"+
                     "</head>\n" +
                     "<body>\n" +
                     "<h1>"+
@@ -91,11 +117,11 @@ public class GeneradorHtml {
                 }
             }
             if (parametros.getClase().equals("VIDEO")) {
-                htmlContent = "<video controls " +
+                htmlContent = "<center><video controls " +
                         "width=\"" + atributos.getAncho() +
                         "\" height=\"" + atributos.getAltura() + "\">" +
                         "<source src=\"" + atributos.getOrigen() + "\" type=\"video/mp4\">" +
-                        "</video>";
+                        "</video></center>";
                 try {
                     String contenidoExistente = new String(Files.readAllBytes(Paths.get(filePath)));
                     htmlContent = contenidoExistente.replace("</body>", htmlContent + "\n</body>");
@@ -105,13 +131,31 @@ public class GeneradorHtml {
                 }
             }
             if (parametros.getClase().equals("MENU")) {
-                htmlContent = "<h1 style = \" " +
-                        "color: " + atributos.getColor() + "; " +
-                        "text-align: " + atributos.getAlineacion() + "; " +
-                        "color: " + atributos.getColor() + "; " +
+                StringBuilder listas = new StringBuilder();
+                System.out.println("Valor Menus : " + direccionesFinales.toString());
+                if (direccionesFinales.isEmpty()){
+                    direccionesFinales = direccionesFinales2;
+                }
+                for (String direccionesFinale : direccionesFinales) {
+                    listas.append("<li>\n" + "<a style=\"color: wheat;\" href=\"").append(direccionesFinale).append(".html").append("\">").append(direccionesFinale).append("</a>").append("</li>\n");
+                }
+
+                System.out.println("Listasssssssssss ****************  :  "+ listas);
+                htmlContent = "<ul  style=\"\n" +
+                        "    list-style-type: none;\n" +
+                        "    display: flex;\n" +
+                        "    flex-direction: row;\n" +
+                        "    margin: 0;\n" +
+                        "    padding: 10px;\n" +
+                        "    background-color: #34495e;\n" +
+                        "    justify-content: space-evenly;\n" +
+                        "    color: wheat;\n" +
                         "\">\n" +
-                        atributos.getTexto() +
-                        "</h1>";
+                        "    <li><a style=\"color: wheat;\" href=\"index.html\">Home</a></li>\n" +
+                            listas+
+                        "</ul>\n";
+
+
                 try {
                     String contenidoExistente = new String(Files.readAllBytes(Paths.get(filePath)));
                     htmlContent = contenidoExistente.replace("</body>", htmlContent + "\n</body>");

@@ -13,7 +13,6 @@ public class sym {
   public static final int PAGINA = 30;
   public static final int PARAMETROS = 20;
   public static final int MODIPAG = 24;
-  public static final int ETIQUETAS = 27;
   public static final int FECHAMODI = 38;
   public static final int LETRAS = 17;
   public static final int IGUAL = 11;
@@ -50,6 +49,7 @@ public class sym {
   public static final int CORIZQ = 5;
   public static final int CIERRE = 12;
   public static final int BORRARSITIO = 41;
+  public static final int ETIQUETASX = 27;
   public static final int MODICOM = 40;
   public static final String[] terminalNames = new String[] {
   "EOF",
@@ -79,7 +79,7 @@ public class sym {
   "MODIPAG",
   "ATRIBUTO",
   "ATRIBUTOS",
-  "ETIQUETAS",
+  "ETIQUETASX",
   "ETIQUETA",
   "AGREGARCOM",
   "PAGINA",

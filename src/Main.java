@@ -3,7 +3,7 @@ import Servidor.Servidor;
 import ServidorP.ServidorP;
 import java.io.IOException;
 
-public class    Main {
+public class        Main {
     public static ServidorP servidorP = new ServidorP();
 
     public static void main(String[] args) {

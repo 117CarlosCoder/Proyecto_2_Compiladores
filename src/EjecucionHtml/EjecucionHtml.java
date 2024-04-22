@@ -3,26 +3,36 @@ package EjecucionHtml;
 import Atributos.Atributos;
 import DesplegarPagina.DesplegarPagina;
 import Ejecucion.Accion;
-import EnvioMensaje.EnvioMensaje;
 import GeneradorHtml.GeneradorHtml;
 import GenerarArchivoTxt.GenerarArchivoTxt;
 import JcupHtml.parser;
 import Jflex.Lexico;
+import Modelos.Pagina;
+import Modelos.Sitio;
+import ModificarXml.MoidificarXml;
 import Parametros.Parametros;
 import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
-import static Conexion.Conexion.cs;
 import static ServidorP.ServidorP.message;
 import static ServidorP.ServidorP.sendErrorMessage;
 
 public class EjecucionHtml {
     private static final DesplegarPagina desplegarPagina = new DesplegarPagina();
     private static final GeneradorHtml generadorHtml = new GeneradorHtml();
-    private static String usuarioG;
+    public static String usuarioG;
+    private static List<String> arrayList = new ArrayList<>();
+    private static List<String> arrayListSitios = new ArrayList<>();
+    private static List<Sitio> arraySitios = new ArrayList<>();
+    private static List<Pagina> arrayPaginas = new ArrayList<>();
+    public static List<String> direccionesFinales2 = new ArrayList<>();
     public static void valor(String valor, Atributos atributos, Parametros parametros){
 
         System.out.println("VALOR : " + valor);
@@ -39,7 +49,61 @@ public class EjecucionHtml {
         }
 
         if (Accion.AGREGAR_COMPONENTE.toString().equals(valor)){
-            if (!parametros.getId().isEmpty() && !parametros.getClase().isEmpty() && !parametros.getPagina().isEmpty()) {
+            if (!parametros.getId().isEmpty() && !parametros.getClase().isEmpty() && !parametros.getPagina().isEmpty() ) {
+                System.out.println(atributos);
+                String rutaArchivo = "src/DIrectorio/pagina/xml.xml";
+                File archivop = new File(rutaArchivo);
+                if (archivop.exists() && "MENU".equals(parametros.getClase())){
+                    System.out.println("Parametros antes iniciar direcciones " + parametros);
+                    if (archivop.exists() && "MENU".equals(parametros.getClase())) {
+                        System.out.println("Iniciando direcciones");
+                        String xml = EjecucionHtml.convertXMLToString(rutaArchivo);
+                        assert xml != null;
+                        String xmlString = removeXMLDeclaration(xml);
+                        arrayList = MoidificarXml.obtenerIds(xmlString);
+                        arrayListSitios = MoidificarXml.obtenerIdsSitios(xmlString);
+                        List<String> arrayListPaginas;
+                        arrayPaginas.clear();
+                        if (!atributos.getEtiquetas().isEmpty()) {
+                            for (int i = 0; i < Objects.requireNonNull(arrayListSitios).size(); i++) {
+
+
+                                arrayListPaginas = MoidificarXml.obtenerIdsNuevasPaginasConPadre(xml, arrayListSitios.get(i));
+                                System.out.println("Buscando en sitio id "+arrayListSitios.get(i));
+                                System.out.println(arrayListPaginas);
+                                for (int j = 0; j < Objects.requireNonNull(arrayListPaginas).size(); j++) {
+                                    List<String> arrayListEtiquetas;
+                                    arrayListEtiquetas = MoidificarXml.obtenerEtiquetas(xml, arrayListPaginas.get(j));
+                                    arrayPaginas.add(new Pagina(arrayListPaginas.get(j), arrayListEtiquetas));
+                                }
+                                arraySitios.add(new Sitio(arrayListSitios.get(i), arrayPaginas));
+                            }
+                            String[] partes = atributos.getEtiquetas().split("\\|");
+                            int contador = -1;
+                            direccionesFinales2.clear();
+                            System.out.println("Direcciones finales antes: " + direccionesFinales2);
+                            System.out.println("Partes obtenidas:");
+                            for (String parte : partes) {
+                                System.out.println(parte);
+                                for (int i = 0; i < Objects.requireNonNull(arrayListSitios).size(); i++){
+                                    System.out.println("Repetir 1 "+arrayListSitios.size());
+                                    for (int j = 0; j < Objects.requireNonNull(arrayPaginas).size(); j++) {
+                                        if (arraySitios.get(i).getPaginas().get(j).getEtiquetas().contains(parte)){
+                                            System.out.println("Repetir"+arrayPaginas.size());
+                                            if (contador != j){
+                                                direccionesFinales2.add(arraySitios.get(i).getPaginas().get(j).getPagina());
+                                            }
+                                            contador = j;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        System.out.println("Direcciones finales: " + direccionesFinales2);
+                        System.out.println("Valores ************* " + Arrays.toString(arraySitios.toArray()));
+                    }
+                }
+
                 generadorHtml.Generar(valor, atributos, parametros);
             }
         }
@@ -89,7 +153,7 @@ public class EjecucionHtml {
         }
     }
 
-    public static void ejecutarHtml(String mensaje,String pagina, boolean valor){
+    public static void ejecutarHtml(String mensaje,String pagina , boolean valor){
         String usuario = "pagina";
         String filePath = "/home/carlosl/IdeaProjects/ManejadorDeContenido/src/DIrectorio/"+usuario+"/xml.xml";
         String filePath2 = "/home/carlosl/IdeaProjects/ManejadorDeContenido/src/DIrectorio/"+usuario+"/"+pagina+".html";// Reemplaza con la ruta de tu archivo XML

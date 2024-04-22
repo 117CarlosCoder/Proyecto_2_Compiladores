@@ -1,5 +1,6 @@
 package ModificarXml;
 
+import Atributos.Atributos;
 import Parametros.Parametros;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import static Ejecucion.Ejecucion.contar;
 
 public class MoidificarXml {
     public MoidificarXml() {
@@ -83,7 +85,79 @@ public class MoidificarXml {
         System.out.println("No se encontró ninguna acción con el ID especificado.");
     }
 
+    public static void modificarEtiquetas(Document doc, String id, String nuevaEtiqueta) {
+        System.out.println("**************Modificar Etiquetas****************");
+        NodeList acciones = doc.getElementsByTagName("accion");
+        for (int i = 0; i < acciones.getLength(); i++) {
+            Node accion = acciones.item(i);
+            if (accion.getNodeType() == Node.ELEMENT_NODE) {
+                Element elementoAccion = (Element) accion;
+                // Obtener el valor del ID de los parámetros
+                String valorIdParametros = elementoAccion.getElementsByTagName("parametro").item(0).getTextContent().trim().replaceAll("[\\[|\\]]", "");
 
+                System.out.println("ID buscado " + id);
+                System.out.println("Contador " +contar);
+                System.out.println("Parametros " + valorIdParametros);
+                if (valorIdParametros.equals(id)) {
+                    // La acción con el ID especificado fue encontrada
+                    Element etiquetas = (Element) elementoAccion.getElementsByTagName("etiquetas").item(0);
+                    // Eliminar todas las etiquetas existentes
+                    if(contar==0) {
+                        NodeList listaEtiquetas = etiquetas.getElementsByTagName("etiqueta");
+                        for (int j = listaEtiquetas.getLength() - 1; j >= 0; j--) {
+                            etiquetas.removeChild(listaEtiquetas.item(j));
+                            System.out.println("Etiquetas eliminadas: " + listaEtiquetas.getLength()+1);
+                        }
+                    }
+                    // Crear y agregar la nueva etiqueta
+                    Element nuevaEtiquetaElement = doc.createElement("etiqueta");
+                    nuevaEtiquetaElement.setAttribute("valor", nuevaEtiqueta);
+                    etiquetas.appendChild(nuevaEtiquetaElement);
+
+                    // Guardar los cambios en el archivo XML
+                    guardarCambios(doc);
+                    contar++;
+                    return;
+                }
+            }
+        }
+
+        // Si no se encuentra la acción con el ID proporcionado
+        System.out.println("La acción con el ID proporcionado no se encontró en el documento XML.");
+    }
+
+
+    public static void modificarTitulo(Document doc, String id, String nuevoTitulo) {
+        NodeList acciones = doc.getElementsByTagName("accion");
+        for (int i = 0; i < acciones.getLength(); i++) {
+            Node accion = acciones.item(i);
+            if (accion.getNodeType() == Node.ELEMENT_NODE) {
+                Element elementoAccion = (Element) accion;
+                // Obtener el valor del ID de los parámetros
+                String valorIdParametros = elementoAccion.getElementsByTagName("parametro").item(0).getTextContent().trim().replaceAll("[\\[|\\]]", "");
+
+                if (valorIdParametros.equals(id)) {
+                    // La acción con el ID especificado fue encontrada
+                    Element parametros = (Element) elementoAccion.getElementsByTagName("parametros").item(0);
+                    NodeList listaParametros = parametros.getElementsByTagName("parametro");
+                    // Buscar el parámetro "TITULO" y modificar su valor
+                    for (int j = 0; j < listaParametros.getLength(); j++) {
+                        Element parametro = (Element) listaParametros.item(j);
+                        if (parametro.getAttribute("nombre").equals("TITULO")) {
+                            parametro.setTextContent("[" + nuevoTitulo + "]");
+                            guardarCambios(doc);
+                            return;
+                        }
+                    }
+                    // Si no se encuentra el parámetro "TITULO"
+                    System.out.println("El parámetro 'TITULO' no se encontró dentro de la acción con el ID proporcionado.");
+                    return;
+                }
+            }
+        }
+        // Si no se encuentra la acción con el ID proporcionado
+        System.out.println("La acción con el ID proporcionado no se encontró en el documento XML.");
+    }
 
     public static void eliminarAccion(Document doc, String nombreAccion) {
         NodeList acciones = doc.getElementsByTagName("accion");
@@ -180,7 +254,7 @@ public class MoidificarXml {
         System.out.println("Se han añadido las acciones al archivo XML.");
     }
 
-    public static void anadirPagina(Document doc, Parametros parametros) {
+    public static void anadirPagina(Document doc, Parametros parametros, Atributos atributos) {
         // Crear el elemento de la página
         Element paginaElement = doc.createElement("accion");
         paginaElement.setAttribute("nombre", "NUEVA_PAGINA");
@@ -201,9 +275,28 @@ public class MoidificarXml {
         // Añadir los parámetros al elemento de la página
         paginaElement.appendChild(parametrosElement);
 
+        // Añadir las etiquetas al elemento de la página
+        Element etiquetasElement = doc.createElement("etiquetas");
+        if (!atributos.getEtiqueta().isEmpty()) {
+            for (String etiqueta : atributos.getEtiqueta()) {
+                Element etiquetaElement = doc.createElement("etiqueta");
+                etiquetaElement.setAttribute("valor", etiqueta);
+                agregarEtiqueta(etiquetasElement, etiquetaElement);
+            }
+        }
+        paginaElement.appendChild(etiquetasElement);
+
+        // Añadir la nueva página al documento XML
+        MoidificarXml.anadirAccionPagina(doc, paginaElement);
+
         // Añadir la nueva página al documento XML
         MoidificarXml.anadirAccionPagina(doc, paginaElement);
     }
+
+    private static void agregarEtiqueta(Element etiquetasx, Element etiqueta) {
+        etiquetasx.appendChild(etiqueta);
+    }
+
 
     public static void agregarParametro(Document doc, Element accionElement, String nombre, String valor) {
         Element parametroElement = doc.createElement("parametro");
@@ -274,6 +367,125 @@ public class MoidificarXml {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static List<String> obtenerIdsSitios(String xmlString) {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            InputSource is = new InputSource(new StringReader(xmlString));
+            Document document = builder.parse(is);
+
+            NodeList acciones = document.getElementsByTagName("accion");
+            List<String> idList = new ArrayList<>();
+
+            for (int i = 0; i < acciones.getLength(); i++) {
+                Element accion = (Element) acciones.item(i);
+                String nombreAccion = accion.getAttribute("nombre");
+                if ("NUEVO_SITIO_WEB".equals(nombreAccion)) {
+                    NodeList parametros = accion.getElementsByTagName("parametro");
+                    for (int j = 0; j < parametros.getLength(); j++) {
+                        Element parametro = (Element) parametros.item(j);
+                        if ("ID".equals(parametro.getAttribute("nombre"))) {
+                            String id = parametro.getTextContent().replaceAll("[\\[|\\]]", ""); // Eliminar corchetes
+                            if(!idList.contains(id)){
+                                idList.add(id);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return idList;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    public static List<String> obtenerEtiquetas(String xmlString, String idPagina) {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            InputSource is = new InputSource(new StringReader(xmlString));
+            Document document = builder.parse(is);
+
+            NodeList acciones = document.getElementsByTagName("accion");
+
+            for (int i = 0; i < acciones.getLength(); i++) {
+                Element accion = (Element) acciones.item(i);
+                String nombreAccion = accion.getAttribute("nombre");
+                if ("NUEVA_PAGINA".equals(nombreAccion)) {
+                    // Obtener el ID de la página
+                    String id = "";
+                    NodeList parametros = accion.getElementsByTagName("parametro");
+                    for (int j = 0; j < parametros.getLength(); j++) {
+                        Element parametro = (Element) parametros.item(j);
+                        if ("ID".equals(parametro.getAttribute("nombre"))) {
+                            id = parametro.getTextContent().replaceAll("[\\[|\\]]", ""); // Eliminar corchetes
+                            break;
+                        }
+                    }
+                    // Si el ID coincide con el proporcionado, obtener las etiquetas
+                    if (id.equals(idPagina)) {
+                        NodeList etiquetas = accion.getElementsByTagName("etiqueta");
+                        List<String> etiquetasLista = new ArrayList<>();
+                        for (int k = 0; k < etiquetas.getLength(); k++) {
+                            Element etiqueta = (Element) etiquetas.item(k);
+                            etiquetasLista.add(etiqueta.getAttribute("valor"));
+                        }
+                        return etiquetasLista;
+                    }
+                }
+            }
+
+            // Si no se encontró la página con el ID proporcionado, devolver una lista vacía
+            return new ArrayList<>();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static List<String> obtenerIdsNuevasPaginasConPadre(String xmlString, String idSitio) {
+        List<String> idsNuevasPaginas = new ArrayList<>();
+
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            InputSource is = new InputSource(new StringReader(xmlString));
+            Document document = builder.parse(is);
+
+            NodeList acciones = document.getElementsByTagName("accion");
+
+            for (int i = 0; i < acciones.getLength(); i++) {
+                Element accion = (Element) acciones.item(i);
+                String nombreAccion = accion.getAttribute("nombre");
+                System.out.println("Nombre accion "+ nombreAccion);
+                if ("NUEVA_PAGINA".equals(nombreAccion)) {
+                    Element parametroId = (Element) accion.getElementsByTagName("parametro")
+                            .item(0); // Primer parametro es el ID
+                    String idPagina = parametroId.getTextContent().trim().replaceAll("[\\[\\]\"]", "");
+
+                    Element parametroPadre = (Element) accion.getElementsByTagName("parametro")
+                            .item(3); // Cuarto parametro es el PADRE
+                    String idPadre = parametroPadre.getTextContent().trim().replaceAll("[\\[\\]\"]", "");
+                    System.out.println("Nombre Padre "+ idPadre);
+                    if (idPadre.equals(idSitio) && !idsNuevasPaginas.contains(idPagina)) {
+                        idsNuevasPaginas.add(idPagina);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Manejo de la excepción: puedes registrar el error o lanzar una excepción personalizada si lo prefieres
+        }
+        System.out.println(idsNuevasPaginas);
+        return idsNuevasPaginas;
     }
 
 }
